@@ -38,11 +38,11 @@ $app->get('/api/sensoren', function(Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-$app->get('/api/metingen', function(Request $request, Response $response) {
+$app->get('/api/meting', function(Request $request, Response $response) {
 
     $repository = $this->get (App\Repositories\MetingRepository::class);
 
-    $data = $repository->getAllMetingen();
+    $data = $repository->getAllMeting();
 
     $body = json_encode($data);
 
@@ -52,8 +52,33 @@ $app->get('/api/metingen', function(Request $request, Response $response) {
 });
 $app->get('/api/sensoren/{id:[0-9]+}', function(Request $request, Response $response, string $id){
    
-    $response->getBody()->write($id);
-    return $response;
+    $repository = $this->get(App\Repositories\SensorRepository::class);
+    $data = $repository->getSensorById((int)$id);
+    
+    if($data === false) {
+        throw new \Slim\Exception\HttpNotFoundException($request, message:"Sensor bestaat niet");
+    }
+
+    $body = json_encode($data);
+    $response->getBody()->write($body);
+
+    return $response->withHeader('Content-Type', 'application/json');
+
+});
+$app->get('/api/meting/{id:[0-9]+}', function(Request $request, Response $response, string $id){
+   
+    $repository = $this->get(App\Repositories\MetingRepository::class);
+    $data = $repository->getMetingById((int)$id);
+    
+    if($data === false) {
+        throw new \Slim\Exception\HttpNotFoundException($request, message:"Meting bestaat niet");
+    }
+
+    $body = json_encode($data);
+    $response->getBody()->write($body);
+
+    return $response->withHeader('Content-Type', 'application/json');
+
 });
 
 $app->run();

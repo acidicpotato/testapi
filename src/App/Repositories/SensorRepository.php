@@ -18,4 +18,18 @@ class SensorRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     }
+    public function getSensorById(int $id) : array | bool 
+    {
+
+        $sql = 'select * from sensor where sensorID = :id';
+        $pdo = $this ->database->getConnection();
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindValue(':id', $id, pdo::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetch(pdo::FETCH_ASSOC);
+    }
 }
