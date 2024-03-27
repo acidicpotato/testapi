@@ -24,4 +24,16 @@ public function showAllSensoren(Request $request, Response $response): Response 
     return $response->withHeader('Content-Type', 'application/json');
 }
 
+ public function addsensor(Request $request, Response $response): Response {
+    $body = $request->getParsedBody();
+    $id = $this->repository->addSensor($body);
+
+    $body = json_encode([
+        'massage' => 'Sensor toegevoegd',
+        'id'=> $id
+    ]);
+    $response->getBody()->write($body);
+
+    return $response->withHeader('content-Type', 'application/json')->withStatus(201);
+ }
 }

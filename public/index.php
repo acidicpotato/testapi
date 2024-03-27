@@ -26,6 +26,8 @@ $app = AppFactory::create();
 $collector = $app->getRouteCollector();
 $collector->setDefaultInvocationStrategy(new RequestResponseArgs);
 
+$app->addBodyParsingMiddleware();
+
 $error_middelware = $app->addErrorMiddleware(true, true, true);
 $error_handler = $error_middelware->getDefaultErrorHandler();
 $error_handler->forceContentType('application/json');
@@ -37,6 +39,7 @@ $app->add(new ApiKeyMiddelware);
 
 $app->get('/api/sensoren', App\Controllers\sensoren::class . ':showAllSensoren');
 
+$app->post('/api/sensoren', App\Controllers\sensoren::class . ':addsensor');
 
 $app->get('/api/sensoren/{id:[0-9]+}', function(Request $request, Response $response, string $id){
    
@@ -46,7 +49,7 @@ $app->get('/api/sensoren/{id:[0-9]+}', function(Request $request, Response $resp
     if($data === false) {
         throw new \Slim\Exception\HttpNotFoundException($request, message:"Sensor bestaat niet");
     }
-
+#dit is gemaakt door tycho heezen 2msi2a
     $body = json_encode($data);
     $response->getBody()->write($body);
 
